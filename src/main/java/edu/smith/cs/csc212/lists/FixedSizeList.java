@@ -67,9 +67,16 @@ public class FixedSizeList<T> extends ListADT<T> {
 	@Override
 	public void addIndex(int index, T value) {
 		// slide to the right
-		throw new TODOErr();
+		this.checkNotEmpty();
+		// add one to fill
+		fill++;
+	 for (int i = fill; i> index; i--) {
+		 this.array.setIndex(i, array.getIndex(i-1));
 	}
-
+		this.array.setIndex( index, value);
+	}
+	
+	
 	@Override
 	public void addFront(T value) {
 		this.addIndex(0, value);
@@ -87,7 +94,21 @@ public class FixedSizeList<T> extends ListADT<T> {
 	@Override
 	public T removeIndex(int index) {
 		// slide to the left
-		throw new TODOErr();
+		this.checkNotEmpty();
+		// make sure the index is reasonable
+		this.checkExclusiveIndex(index);
+		T youAreDeleting = this.array.getIndex(index);
+		// loop through index, looking for the one we want to delete
+		// subtract 1 from the index of spots to the right
+		for (int i = index; i < fill; i++) {
+			this.array.setIndex(i, array.getIndex(i+1));
+			} 
+		// Erase the duplicate, last-item
+		this.array.setIndex(fill, null);
+		return youAreDeleting;
+		
+		
+		
 	}
 
 	@Override
