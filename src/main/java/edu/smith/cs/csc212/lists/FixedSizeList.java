@@ -56,24 +56,29 @@ public class FixedSizeList<T> extends ListADT<T> {
 
 	@Override
 	public T getFront() {
-		throw new TODOErr();
+		return this.array.getIndex(0);
 	}
 
 	@Override
 	public T getBack() {
-		throw new TODOErr();
+		return this.array.getIndex(fill-1);
 	}
 
 	@Override
 	public void addIndex(int index, T value) {
 		// slide to the right
-		this.checkNotEmpty();
 		// add one to fill
-		fill++;
+		// if (no more space)
+		if (isFull() == true) {
+			throw new RanOutOfSpaceError();
+		}
+		
 	 for (int i = fill; i> index; i--) {
 		 this.array.setIndex(i, array.getIndex(i-1));
 	}
+	 	fill++;
 		this.array.setIndex( index, value);
+		
 	}
 	
 	
@@ -98,26 +103,29 @@ public class FixedSizeList<T> extends ListADT<T> {
 		// make sure the index is reasonable
 		this.checkExclusiveIndex(index);
 		T youAreDeleting = this.array.getIndex(index);
-		// loop through index, looking for the one we want to delete
+		// loop through index, 
+		// looking for the one we want to delete
 		// subtract 1 from the index of spots to the right
-		for (int i = index; i < fill; i++) {
+		for (int i = index; i < fill-1; i++) {
 			this.array.setIndex(i, array.getIndex(i+1));
 			} 
 		// Erase the duplicate, last-item
-		this.array.setIndex(fill, null);
+		this.array.setIndex(fill-1, null);
+		fill --;
 		return youAreDeleting;
-		
 		
 		
 	}
 
 	@Override
 	public T removeBack() {
-		throw new TODOErr();
+		this.checkNotEmpty();
+		return removeIndex(fill-1);
 	}
 
 	@Override
 	public T removeFront() {
+		this.checkNotEmpty();
 		return removeIndex(0);
 	}
 

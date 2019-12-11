@@ -31,7 +31,9 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeFront() {
 		checkNotEmpty();
-		throw new TODOErr();
+		T item = start.value;
+		start = start.after;
+		return item;
 	}
 
 	@Override

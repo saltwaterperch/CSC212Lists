@@ -2,6 +2,8 @@ package edu.smith.cs.csc212.lists;
 
 import me.jjfoley.adt.ArrayWrapper;
 import me.jjfoley.adt.ListADT;
+import me.jjfoley.adt.errors.BadIndexError;
+import me.jjfoley.adt.errors.RanOutOfSpaceError;
 import me.jjfoley.adt.errors.TODOErr;
 
 /**
@@ -29,7 +31,8 @@ public class GrowableList<T> extends ListADT<T> {
 	private int fill;
 
 	/**
-	 * Construct a new, empty, GrowableList.
+	 * Construct a new, empty, GrowableLis
+	 * t.
 	 */
 	public GrowableList() {
 		this.array = new ArrayWrapper<>(START_SIZE);
@@ -46,17 +49,34 @@ public class GrowableList<T> extends ListADT<T> {
 	public T removeBack() {
 		this.checkNotEmpty();
 		return removeIndex(fill - 1);
+		
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		// slide to the left
-		throw new TODOErr();
+		// check it's not an empty list
+		this.checkNotEmpty();
+		this.checkExclusiveIndex(index);
+		T youAreDeleting = this.array.getIndex((index));
+		// loop through index to find value we want to delete
+		// subtract 1 from the index of places to the right of deleted 
+		for (int i = index; i < fill-1; i++) {
+			this.array.setIndex(i, array.getIndex(i+1));
+		}
+		fill--;
+		// erase the duplicate last item
+		this.array.setIndex(fill, null);
+		return youAreDeleting;
 	}
 
 	@Override
 	public void addFront(T item) {
 		addIndex(0, item);
+		if (fill >= array.size()) {
+			this.resizeArray();
+		}
+		
 	}
 
 	@Override
@@ -72,13 +92,40 @@ public class GrowableList<T> extends ListADT<T> {
 	 */
 	private void resizeArray() {
 		// TODO: use this where necessary (already called in addBack!)
-		throw new TODOErr();
+		ArrayWrapper<T> bigger = new ArrayWrapper<>(this.array.size()* 2);
+		
+		for (int i = 0; i < this.array.size(); i++) {
+			bigger.setIndex(i, this.array.getIndex(i));
+		}
+		this.array = bigger;
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
+		
+		System.out.println("index:" + index);
+		System.out.println("fill" + this.fill);
+		checkInclusiveIndex(index);
 		// slide to the right
-		throw new TODOErr();
+		
+		// if the index is larger than the original array and the array is full
+		// resize the array
+		if (this.fill >= this.array.size()) {
+			this.resizeArray();
+		}
+		
+
+		/*
+		if (index > fill) {
+			this.resizeArray();
+		} */
+
+		for (int i = this.fill; i> index; i--) {
+			this.array.setIndex(i, array.getIndex(i-1));
+		}
+			fill++;
+			this.array.setIndex( index, item);
+		
 	}
 
 	@Override
